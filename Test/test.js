@@ -1,10 +1,10 @@
 const https = require('https');
 
-async function getGoalsForTeam1(team, year){
+async function getGoalsForTeam(team, year, team_no){
     var TOTAL = 0;
     var options = {
         hostname: `jsonmock.hackerrank.com`,
-        path: `/api/football_matches?year=${year}&team1=${team}&page=${1}`,
+        path: `/api/football_matches?year=${year}&team${team_no}=${team}&page=${1}`,
         method: 'GET'
     }
     https.request(options, async (res) => {
@@ -17,7 +17,11 @@ async function getGoalsForTeam1(team, year){
             const total_pages = DATA.total_pages;
             // console.log(TOTAL);
             for (var i = 0; i < data.length; i++) {
-                TOTAL += parseInt(data[i].team1goals);
+                if(team_no == 1){
+                    TOTAL += parseInt(data[i].team1goals);
+                } else {
+                    TOTAL += parseInt(data[i].team2goals);
+                }
             }
             // console.log(TOTAL);
             // console.log(total_pages);
@@ -25,7 +29,7 @@ async function getGoalsForTeam1(team, year){
                 for (var j = 2; j <= total_pages; j++) {
                     const more_options = {
                         hostname: `jsonmock.hackerrank.com`,
-                        path: `/api/football_matches?year=${year}&team1=${team}&page=${j}`,
+                        path: `/api/football_matches?year=${year}&team${team_no}=${team}&page=${j}`,
                         method: 'GET'
                     };
                     const req2 = await https.request(more_options, (_res) => {
@@ -33,7 +37,12 @@ async function getGoalsForTeam1(team, year){
                             DATA = JSON.parse(_d.toString('utf8'));
                             data = DATA.data;
                             for (var i = 0; i < data.length; i++) {
-                                TOTAL += parseInt(data[i].team1goals);
+                                if(team_no == 1){
+                                    TOTAL += parseInt(data[i].team1goals);
+                                } else {
+                                    TOTAL += parseInt(data[i].team2goals);
+                                }
+                                
                             }
                         });
                     });
@@ -45,7 +54,7 @@ async function getGoalsForTeam1(team, year){
                 }
             };
             _foorLoop();
-            console.log("TOTAL hello1 " + TOTAL);
+            console.log(`TOTAL hello${team_no} ` + TOTAL);
             // console.log(TOTAL);
             flag1 = 1;
 
@@ -59,77 +68,11 @@ async function getGoalsForTeam1(team, year){
     return TOTAL;
 }
 
-async function getGoalsForTeam2(team, year){
-    
-
-    var TOTAL = 0;
-    var options = {
-        hostname: `jsonmock.hackerrank.com`,
-        path: `/api/football_matches?year=${year}&team2=${team}&page=${1}`,
-        method: 'GET'
-    }
-    https.request(options, async (res) => {
-        res.on('data', d => {
-            // process.stdout.write(d);
-            var DATA = d.toString('utf8');
-            DATA = JSON.parse(DATA);
-            // console.log()
-            const data = DATA.data;
-            const total_pages = DATA.total_pages;
-            // console.log(TOTAL);
-            for (var i = 0; i < data.length; i++) {
-                TOTAL += parseInt(data[i].team2goals);
-            }
-            // console.log(TOTAL);
-            // console.log(total_pages);
-            const forLoop = async (loop) => {
-                for (var j = 2; j <= total_pages; j++) {
-                    const more_options = {
-                        hostname: `jsonmock.hackerrank.com`,
-                        path: `/api/football_matches?year=${year}&team2=${team}&page=${j}`,
-                        method: 'GET'
-                    };
-                    const req4 = await https.request(more_options, async (_res) => {
-                        _res.on('data', _d => {
-                            DATA = JSON.parse(_d.toString('utf8'));
-                            data = DATA.data;
-                            for (var i = 0; i < data.length; i++) {
-                                TOTAL += parseInt(data[i].team2goals);
-                            }
-                        });
-                    });
-                    await req4.on('error', error => {
-                        console.error(error);
-                    });
-                    console.log("exec 2 : iter : " + j);
-
-                    await req4.end();
-                }
-            };
-            forLoop();
-            console.log("TOTAL hello2 " + TOTAL);
-            // return TOTAL;
-            flag2 = 1;
-            return TOTAL;
-        });
-    })
-        .on('error', error => {
-            console.error(error);
-        })
-        .end()
-    return TOTAL;
-}
-
-
 module.exports = async (team, year) => {
     var TOTAL = 0;
 
-    TOTAL += await getGoalsForTeam1(team, year);
-    TOTAL += parseInt(await getGoalsForTeam2(team, year));
+    TOTAL += await getGoalsForTeam(team, year, 1);
+    TOTAL += parseInt(await getGoalsForTeam(team, year, 2));
 
     return TOTAL;
 };
-
-// module.exports = {
-//     getTotalGoals: getTotalGoals
-// };
