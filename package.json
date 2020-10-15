@@ -1,0 +1,21 @@
+{
+  "name": "BareNode",
+  "version": "1.0.0",
+  "description": "",
+  "author": "ahtrahdis7 <sidharthabiki@gmail.com>",
+  "keywords": [],
+  "license": "ISC",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "express": "^4.17.1",
+    "http-errors": "^1.8.0",
+    "nodemon": "^2.0.5",
+    "pino": "^6.7.0",
+    "pino-http": "^5.3.0",
+    "pino-pretty": "^4.3.0"
+  }
+}
