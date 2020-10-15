@@ -33,7 +33,7 @@ const fun = async () => {
   console.log("start");
 
 	var ans = await getTotalGoals("barcelona", 2011);
-  await console.log("Final Output : "+ ans);
+  console.log("Final Output : "+ ans);
   
   console.log("end")
 }
