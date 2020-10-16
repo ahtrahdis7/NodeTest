@@ -1,10 +1,33 @@
 // import { getTotalGoals } from './Test/test'
 const express = require('express')
-const getTotalGoals = require('./Test/test')
 // Create the express app
 const app = express()
+const mongoose = require('mongoose')
+
+
+// IMPORT LOCAL PACKAGES
+const config = require('./config');
+const authenticate = require('./authenticate');
+
+// IMPORT ROUTERS
+const AuthRouter = require('./Routes/Auth/AuthRouter');
+
+// INIT MONGO DB
+const mongodburl = config.MONGODB_URL;
+mongoose.connect(mongodburl, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  useCreateIndex: true
+})
+.then(console.log(`Connected to MongoDB`))
+.catch(error => {
+  console.log(error);
+});
+
 
 // Routes and middleware
+
+app.use('/auth', AuthRouter);
 // app.use(/* ... */)
 // app.get(/* ... */)
 
@@ -17,24 +40,14 @@ app.use(function fiveHundredHandler (err, req, res, next) {
   res.status(500).send()
 })
 
+
+
 // Start server
-app.listen(1234, function (err) {
+app.listen(config.PORT, function (err) {
   if (err) {
     return console.error(err)
   }
 
-  console.log('Started at http://localhost:1234')
+  console.log(`Started at http://localhost:${config.PORT}`)
 })
 
-// TESTING ZONE
-
-
-const fun = async () => {
-  console.log("start");
-
-	var ans = await getTotalGoals("barcelona", 2011);
-  console.log("Final Output : "+ ans);
-  
-  console.log("end")
-}
-fun();
