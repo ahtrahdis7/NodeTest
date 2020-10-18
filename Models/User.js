@@ -2,6 +2,11 @@ const mongoose = require('mongoose');
 const passportLocalMongoose = require('passport-local-mongoose')
 
 const User = mongoose.Schema({
+    email: {
+        type: String,
+        required: true,
+        unique: true,
+    },
     name: {
         type: String,
         required: false
@@ -14,21 +19,29 @@ const User = mongoose.Schema({
         type: String,
         required: false
     },
-    email: {
+    institution:{
         type: String,
         required: false
     },
     isTeacher: {
-        type: String,
-        required: false
+        type: Boolean,
+        required: false,
+        default: false,
     },
     isStudent: {
-        type: String,
-        required: false
+        type: Boolean,
+        required: false,
+        default: false,
     },
     isParent: {
-        type: String,
-        required: false
+        type: Boolean,
+        required: false,
+        default: false,
+    },
+    isEmailVerified: {
+        type: Boolean,
+        required: false,
+        default: false
     }
 }, {timestamps: true});
 

@@ -1,19 +1,28 @@
 
 
 const authenticate = require('../../authenticate');
-const User = require('../../Models/User')
+const DiscussionRoom = require('../../Models/DiscussionRoom')
 const Mail = require('../../Utils/Mail')
 
 const get = (req, res, next) => {
-    res.statusCode = 403;
-    res.end('GET operation not supported yet');
+    DiscussionRoom.find({})
+    .then((docs) => {
+        res.statusCode = 200;
+        res.json({
+            discussions: docs
+        })
+    })
 }
 
 const post = (req, res, next) => {
-    Otp.findOne({email: req.body.email})
+    req.body.byUser = req.user._id;
+    DiscussionRoom.create(req.body)
     .then((doc) => {
-        Mail.SendOtp(doc.email, doc.otp);
-    });
+        res.statusCode = 200;
+        res.json({
+            thread: doc
+        });
+    })
 }
 
 const put = (req, res, next) => {

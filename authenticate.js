@@ -47,3 +47,23 @@ exports.jwtPassport = passport.use(new JwtStrategy(opts,
     }));
 
 exports.verifyUser = passport.authenticate('jwt', {session: false});
+
+exports.verifyParent = (req, res, next) => {
+    if(req.user.isParent == true){
+        next();
+    } else {
+        var err = new Error('Only admin can perform this operation');
+        err.status = 403;
+        return next(err);
+    }
+}
+
+exports.verifyTeacher = (req, res, next) => {
+    if(req.user.isTeacher == true){
+        next();
+    } else {
+        var err = new Error('Only teacher can perform this operation');
+        err.status = 403;
+        return next(err);
+    }
+}

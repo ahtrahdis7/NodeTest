@@ -2,40 +2,37 @@
 
 const authenticate = require('../../authenticate');
 const User = require('../../Models/User')
-const Student = require('../../Models/Student')
+const Subject = require('../../Models/Subject');
 
 const get = (req, res, next) => {
-    Student.findById(req.params.studentId)
-    .populate('user')
-    .populate('score.subject')
-    .then((student) => {
+    Subject.find({})
+    .then((docs) => {
         res.statusCode = 200;
         res.json({
-            student: student,
+            subjects: docs
         })
     })
 }
 
 const post = (req, res, next) => {
-    Student.findById(req.params.studentId)
-    .then((student) => {
-        if(student){
-            student.score.push({
-                subject: req.body.subjectId,
-            })
+    Subject.create(req.body)
+    .then((doc) => {
+        if(doc) {
             res.statusCode = 200;
             res.json({
-                student: student,
-            })
+                subject: doc
+            });
         }
-    })
+    });
 }
 
+// To be added
 const put = (req, res, next) => {
     res.statusCode = 403;
     res.end('LOGIN operation not supported yet');
 }
 
+// To be added
 const del = (req, res, next) => {
     res.statusCode = 403;
     res.end('LOGIN operation not supported yet');
