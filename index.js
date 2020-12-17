@@ -11,13 +11,10 @@ var passport = require('passport');
 
 // IMPORT LOCAL PACKAGES
 const config = require('./config');
-const authenticate = require('./authenticate');
+// const authenticate = require('./authenticate');
 
 // IMPORT ROUTERS
-const AuthRouter = require('./Routes/Auth/AuthRouter');
-const UsersRouter = require('./Routes/Users/UserRouter');
-const FeatureRouter = require('./Routes/Features/FeatureRouter');
-const SubjectRouter = require('./Routes/Subjects/Router');
+const ocrRouter = require('./Routes/ocr_server')
 
 // CORS 
 app.use(cors());
@@ -28,16 +25,16 @@ app.use(function(req, res, next) {
 });
 
 // INIT MONGO DB
-const mongodburl = config.MONGODB_URL;
-mongoose.connect(mongodburl, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  useCreateIndex: true
-})
-.then(console.log(`Connected to MongoDB`))
-.catch(error => {
-  console.log(error);
-});
+// const mongodburl = config.MONGODB_URL;
+// mongoose.connect(mongodburl, {
+//   useNewUrlParser: true,
+//   useUnifiedTopology: true,
+//   useCreateIndex: true
+// })
+// .then(console.log(`Connected to MongoDB`))
+// .catch(error => {
+//   console.log(error);
+// });
 
 
 app.use(bodyParser.json({limit: "512kb", extended: true}));
@@ -51,10 +48,10 @@ app.use(passport.initialize());
 
 // Routes and middleware
 
-app.use('/auth', AuthRouter);
-app.use('/user', UsersRouter);
-app.use('/feature', FeatureRouter);
-app.use('/subject', SubjectRouter);
+app.use('/ocr', ocrRouter);
+// app.use('/user', UsersRouter);
+// app.use('/feature', FeatureRouter);
+// app.use('/subject', SubjectRouter);
 // app.use(/* ... */)
 // app.get(/* ... */)
 
